@@ -31,7 +31,8 @@ get '/create' do
   result = {:thumbnail => {:width => width, :height => height, :data => Base64.encode64(thumb.read)}}
 
   if(callback)
-    callback.gsub!(/[^A-Za-z0-9]/, '')
+    callback.gsub!(/\%3F/, '?');
+    callback.gsub!(/[^A-Za-z0-9\?]/, '')
     return "#{callback}(#{result.to_json})"
   else
     return result.to_json
