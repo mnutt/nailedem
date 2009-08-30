@@ -29,26 +29,3 @@ post '/create' do
 
   return img.make
 end
-
-__END__
-
-@@ home
-
-<html>
-<head>
-  <title>Nailed Em</title>
-<body>
-
-<h1>Nailed Em</h1>
-<p>Thumbnail generation service</p>
-
-<form action="/create" method="POST">
-  <label for="url">URL:</label>
-  <input type="text" name="url" />
-  <label for="width">Size:</label>
-  <input type="text" size="2" name="width" /> x <input type="text" size="2" name="height" />
-  <input type="submit" value="Nail it" />
-</form>
-
-</body>
-</html>
