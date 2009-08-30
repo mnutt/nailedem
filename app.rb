@@ -5,12 +5,15 @@ require 'rubygems'
 require 'sinatra'
 require 'open-uri'
 require 'paperclip'
+require 'json'
+require 'base64'
 
 get '/' do
   erb :home
 end
 
-post '/create' do
+get '/create' do
+  callback = params[:callback]
   url = params[:url]
   width, height = params[:width] || 50, params[:height] || 50
   img = {}
@@ -24,8 +27,13 @@ post '/create' do
     img = Paperclip::Thumbnail.new(orig, {:geometry => "#{width}x#{height}>", :format => 'png'})
   end
 
-  response['Content-Disposition'] = "inline; filename='thumb.png'"
-  response['Content-Type'] = "image/png"
+  thumb = img.make
+  result = {:thumbnail => {:width => width, :height => height, :data => Base64.encode64(thumb.read)}}
 
-  return img.make
+  if(callback)
+    callback.gsub!(/[^A-Za-z0-9]/, '')
+    return "#{callback}(#{result.to_json})"
+  else
+    return result.to_json
+  end
 end
